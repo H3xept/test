@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <style>
+        .big {
+            width: 5rem;
+            height: 2rem;
+        }
+        .nodoubletap {
+            touch-action: manipulation;
+        }
+    </style>
+    <body class="nodoubletap">
+    <button id="dash" onclick="writeC('-')" class="big">
+        -
+    </button>
+    <button id="dot" onclick="writeC('.')" class="big">
+        .
+    </button>
+    <button onclick="clearP()" class="big">Clear</button>
+    <div>
+        <h3> RIDDLE ME THIS! </h3>
+
+        <p>
+        In a world where science meets mystic art,
+        A boy in armor, playing his part.
+        With a body made of steel, yet not a knight,
+        He seeks a stone to set things right.
+
+        Who am I talking about? What's their first name?
+        </h3>
+        <h3>Message: <p id="message"></p</h3>
+        <h3 id='flag'></h3>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        let message = ''
+        function refresh() {
+            const messageP = document.getElementById('message')
+            messageP.innerHTML = message
+        }
+        function validate(a) {
+            return CryptoJS.SHA256(a).toString() === '0c8a8bae61d6ed1927739d5f22257ea4911388981c4d3955dbc7974ba77be46e'
+        }
+        function b64DecodeUnicode(str) {
+                return decodeURIComponent(atob(str).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+        }
+        function reveal() {
+            const flagP = document.getElementById('flag')
+            if (!validate(message)) return
+            flagP.innerHTML = CryptoJS.AES.decrypt('U2FsdGVkX19I+1HgjaaRroZjrnjmfP3qyMKmdQiVrXo=', message).toString(CryptoJS.enc.Utf8)
+        }
+        function writeC(char) {
+            message += char
+            refresh()
+            reveal()
+        }
+        function clearP() {
+            message = ''
+            refresh()
+        }
+        </script>
+    </body>
+    </html>
